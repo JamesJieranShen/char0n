@@ -81,19 +81,32 @@ class ChromaHandler:
                 pmt_types.tobytes()]
 
     def respond_to_zmq_request(self, frames: list):
-        client_address = frames[0]
+        # We might be receiving using a router socket or a rep socket. 
+        # Envelope needs to be added for router.
+        if len(frames) < 2 or frames[1] != DELIMITER:
+            delimited = False
+        else:
+            delimited = True
+        client_address = frames[0] if delimited else None
         # frames[1] is the delimiter
-        messages = frames[2:]
+        messages = frames[2:] if delimited else frames
         header = messages[0]
+        response = [client_address, DELIMITER] if delimited else []
         if header == DETECTOR_INFO:
             detector_info = self.process_detector_info()
-            return [client_address, DELIMITER, DETECTOR_INFO] + detector_info
-        if header == PHOTONDATA:
+            response.append(DETECTOR_INFO) # Header
+            response.extend(detector_info) # body
+        elif header == PHOTONDATA:
             photons, event_id = self.parse_zmq_sim_request(messages)
             event = self.run_simulation(photons)
             if event is None:
-                return [client_address, DELIMITER, SIM_FAILED, event_id]
+                response.append(SIM_FAILED)
+                response.append(event_id)
             else:
                 processed_event = self.process_event(event)
-                return [client_address, DELIMITER, SIM_COMPLETE, event_id] + processed_event
-        return [client_address, DELIMITER, UNKNOWN_REQUEST]
+                response.append(SIM_COMPLETE)
+                response.append(event_id)
+                response.extend(processed_event)
+        else:
+            response.append(UNKNOWN_REQUEST)
+        return response

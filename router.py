@@ -114,10 +114,8 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             print("W: Interrupted, attempting to gracefully shut down...")
             print("W: Press Ctrl+C again to force quit.")
-            break
-        
-    # Clean up
-    backend.close()
-    frontend.close()
-    context.term()
-    print("Goodbye!")
+            backend.close()
+            frontend.close()
+            context.term()
+            print("Goodbye!")
+            exit(0)

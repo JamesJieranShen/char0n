@@ -19,7 +19,7 @@ def worker_socket(context, poller):
     return worker
 
 if __name__ == "__main__":
-    chroma_handler = ChromaHandler("detector.pkl")
+    chroma_handler = ChromaHandler(geometry_pickle)
     context = zmq.Context(IO_THREADS)
     poller = zmq.Poller()
     liveness = HEARTBEAT_LIVENESS

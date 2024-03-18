@@ -2,6 +2,8 @@
 frontend_port = "5555"
 backend_port = "5556"
 
+geometry_pickle = "detector.pkl"
+
 HEARTBEAT_LIVENESS = 3    # Time of heartbeats missed before server considers client dead
 HEARTBEAT_INTERVAL = 1.0  # Seconds
 WORKER_RETRY_AFTER = 2.0  # Seconds
