@@ -12,7 +12,10 @@ if __name__ == "__main__":
     try:
         context = zmq.Context(IO_THREADS)
         socket = context.socket(zmq.REP)
-        socket.bind(f"tcp://*:{frontend_port}")
+        address = f"tcp://*:{frontend_port}"
+        socket.bind(address)
+        print(f"Connected to {address}")
+        # socket.bind("ipc:///tmp/chroma")
         chroma_handler = ChromaHandler(geometry_pickle)
         while True:
             frames = socket.recv_multipart()

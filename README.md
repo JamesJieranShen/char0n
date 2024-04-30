@@ -51,16 +51,41 @@ All messages should start with a header chunk. The currently supported headers a
   | z-polarization   | float32    | Parallel array for each photon |
   | wavelength       | float32    | Parallel array for each photon |
   | time             | float32    | Parallel array for each photon |
+  | flags            | uint32     | Parallel array for each photon |
   
   - Response chunks:
   
   | Response Chunks         | Data Type  | Description |
   |-------------------------|------------|-------------|
   | Header                  | bytestring | Either `b"SIM_COMPLETE"`, `b"SIM_FAILED"`, or `b"UNKNOWN_REQUEST"` |
-  | Metadata                | uint32     | Just the event ID for now |
-  | Hit PMT IDs             | uint32      | Parallel array for each hit |
+  | Metadata                | uint32     | Just the event ID for now   |
+  | Hit PMT IDs             | uint32     | Parallel array for each hit |
+  | Hit x-direction         | float32    | Parallel array for each hit |
+  | Hit y-direction         | float32    | Parallel array for each hit |
+  | Hit z-direction         | float32    | Parallel array for each hit |
+  | Hit x-polarization      | float32    | Parallel array for each hit |
+  | Hit y-polarization      | float32    | Parallel array for each hit |
+  | Hit z-polarization      | float32    | Parallel array for each hit |
+  | Hit wavelengths         | float32    | Parallel array for each hit |
   | Hit times               | float32    | Parallel array for each hit |
-  | Hit wavelengths         | float32      | Parallel array for each hit |
+  | Hit flags               | uint32     | Parallel array for each hit |
+
+Flag values are the same as in Chroma:
+```
+NO_HIT           = 0x1 << 0
+BULK_ABSORB      = 0x1 << 1
+SURFACE_DETECT   = 0x1 << 2
+SURFACE_ABSORB   = 0x1 << 3
+RAYLEIGH_SCATTER = 0x1 << 4
+REFLECT_DIFFUSE  = 0x1 << 5
+REFLECT_SPECULAR = 0x1 << 6
+SURFACE_REEMIT   = 0x1 << 7
+SURFACE_TRANSMIT = 0x1 << 8
+BULK_REEMIT      = 0x1 << 9
+CHERENKOV        = 0x1 << 10
+SCINTILLATION    = 0x1 << 11
+NAN_ABORT        = 0x1 << 31
+```
 
 ### Example Client
 An example client implementation is provided in
