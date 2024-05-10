@@ -95,7 +95,7 @@ if __name__ == "__main__":
                 header = frames[2]
                 if header == PING:  # Do not consult workers when ping is received, just reply
                     print(f"I: Received ping from {client_address}")
-                    frontend.send_multipart([client_address, DELIMITER, PONG])
+                    frontend.send_multipart([client_address, DELIMITER, ACK])
                     continue
                 # Received a normal request, forward to the workers
                 print(f"I: Received request! Address: {frames[0]} Header: {frames[2]}")

@@ -5,6 +5,8 @@
 import zmq
 import time
 from chroma_handler import ChromaHandler
+import sys
+import argparse
 
 from config import *
 
@@ -16,7 +18,16 @@ if __name__ == "__main__":
         socket.bind(address)
         print(f"Connected to {address}")
         # socket.bind("ipc:///tmp/chroma")
-        chroma_handler = ChromaHandler(geometry_pickle)
+        parser = argparse.ArgumentParser(
+            prog="simpleworker.py",
+            description="Run a single GPU worker without a backend socket.",
+        )
+        parser.add_argument('--async_mode', action='store_true')
+        parser.add_argument('--outdir')
+        args = parser.parse_args()
+        use_async = args.async_mode
+        print("Running in {} mode".format(("asynchronous") if use_async else "synchronous"))
+        chroma_handler = ChromaHandler(geometry_pickle, async_mode=use_async, outdir=args.outdir)
         while True:
             frames = socket.recv_multipart()
             if not frames:
@@ -24,7 +35,7 @@ if __name__ == "__main__":
             header = frames[0]
             if header == PING:
                 print(f"I: Received ping from client")
-                socket.send_multipart([PONG])
+                socket.send_multipart([ACK])
                 continue
             reply = chroma_handler.respond_to_zmq_request(frames)
             socket.send_multipart(reply)

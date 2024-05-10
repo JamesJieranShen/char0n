@@ -1,8 +1,8 @@
 ## Connection Parameters
 frontend_port = "5555"
-backend_port = "5556"
+backend_port = "6667"
 
-geometry_pickle = "detector.pkl"
+geometry_pickle = "Eos.pkl" # Path to the detector pickle file
 
 HEARTBEAT_LIVENESS = 3    # Time of heartbeats missed before server considers client dead
 HEARTBEAT_INTERVAL = 1.0  # Seconds
@@ -15,9 +15,12 @@ IO_THREADS = 1  # Official recommendation is 1 thread per gbps of send+receive
 READY = b"\x01"
 HEARTBEAT = b"\x02"
 PING = b"PING"
-PONG = b"PONG"
+ACK = b"ACK"
+RUN_BEGIN = b"RUN_BEGIN"
+RUN_END = b"RUN_END"
 DELIMITER = b""
 SIM_COMPLETE = b"SIM_COMPLETE"
+SIM_COMPLETE_ASYNC = b"SIM_COMPLETE_ASYNC"
 SIM_FAILED = b"SIM_FAILED"
 NO_WORKERS = b"NO_WORKERS"
 PHOTONDATA = b"PHOTONDATA"
